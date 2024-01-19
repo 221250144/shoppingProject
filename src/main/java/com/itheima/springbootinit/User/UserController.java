@@ -14,6 +14,13 @@ public class UserController {
     @Autowired
     UserDao userDao;
 
+    // 根据名字查找用户
+    @GetMapping("/getOne")
+    public User getOne(@RequestParam("name") String name) {
+        User user = userDao.findByName(name);
+        return user;
+    }
+
     // 得到数据库里的所有用户
     @GetMapping("/getAll")
     public List getAll() {
@@ -25,11 +32,10 @@ public class UserController {
         return all;
     }
 
-
     // 添加一个用户
     @GetMapping("/add")
     public User add (@RequestParam("name") String name,
-                     @RequestParam("age") @Min(value = 0, message = "年龄不能为负数") int age,
+                     @RequestParam("age") int age,
                      @RequestParam("id") int id,
                      @RequestParam("password") String password) {
         User user = new User();
