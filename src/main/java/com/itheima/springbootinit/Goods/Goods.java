@@ -4,26 +4,43 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+enum GoodsType {
+    食品,服装,家居,学习与办公,电子产品,日用百货,医疗,运动
+}
 
 @Table(name = "goods")
 @Entity
 public class Goods {
     @Id
-    private String name;
-    private String description;
-    private int price;
-    private boolean status;
-    private String imagePath;
+    private String name; // 商品名
+    private String description; // 描述
+    private int price; // 价格
+    private boolean status; // 判断有没有被加入购物车
+    private String imagePath; // 图片路径
+    private GoodsType type; // 商品类型
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public GoodsType getType() {
+        return type;
+    }
+
+    public void setType(GoodsType type) {
+        this.type = type;
+    }
 
     public Goods() {
     }
 
-    public Goods(String name, String description, int price, boolean status, String imagePath) {
+    public Goods(String name, String description, int price, boolean status, String imagePath, GoodsType type) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.status = status;
         this.imagePath = imagePath;
+        this.type = type;
     }
 
     public String getName() {
@@ -67,12 +84,6 @@ public class Goods {
     }
 
     public String toString() {
-        return "Goods{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", status=" + status +
-                ", imagePath='" + imagePath + '\'' +
-                '}';
+        return "name: " + name + " description: " + description + " price: " + price + " status: " + status + " imagePath: " + imagePath + " type: " + type;
     }
 }

@@ -4,11 +4,11 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -18,7 +18,7 @@ public class GoodsController {
     @Autowired
     GoodsDao goodsDao;
 
-    @GetMapping("/getAllGoods")
+    @GetMapping("/getAllGoods") // 得到所有商品
     public List getAllGoods() {
         List all = goodsDao.findAll();
         int len = all.size();
@@ -28,8 +28,57 @@ public class GoodsController {
         return all;
     }
 
+    @GetMapping("/getByType") // 根据商品类型查找商品
+    public List getByType(@RequestParam("type") GoodsType type) {
+        List all = goodsDao.findByType(type);
+        int len = all.size();
+        for (int i = 0; i < len; i++) {
+            System.out.println(all.get(i).toString());
+        }
+        return all;
+    }
+
+    @GetMapping("/addGoods") // 添加商品
+    public Goods addGoods(@RequestParam("name") String name,
+                          @RequestParam("description") String description,
+                          @RequestParam("price") int price,
+                          @RequestParam("status") boolean status,
+                          @RequestParam("imagePath") String imagePath,
+                          @RequestParam("type") GoodsType type) {
+        Goods goods = new Goods();
+        goods.setName(name);
+        goods.setDescription(description);
+        goods.setPrice(price);
+        goods.setStatus(status);
+        goods.setImagePath(imagePath);
+        goods.setType(type);
+        Goods save = goodsDao.save(goods);
+        return save;
+    }
+    @GetMapping("changeStatus") // 将商品放入或取出购物车
+    public String changeStatus(@RequestParam("name") String name) {
+        Goods goods = goodsDao.findByName(name);
+        goods.setStatus(!goods.getStatus());
+        goodsDao.save(goods);
+        return "修改成功";
+    }
+    @GetMapping("getByName") // 根据商品名字查找商品
+    public Goods getByName(@RequestParam("name") String name) {
+        Goods goods = goodsDao.findByName(name);
+        return goods;
+    }
+    @GetMapping("getByStatus") // 查看购物车里的商品 或 未放入购物车的商品
+    public List getByStatus(@RequestParam("status") boolean status) {
+        List all = goodsDao.findByStatus(status);
+        int len = all.size();
+        for (int i = 0; i < len; i++) {
+            System.out.println(all.get(i).toString());
+        }
+        return all;
+    }
+
     @Transactional
-    @PostMapping("/updateGoodsImage")
+    @PostMapping("/updateGoodsImage") // 更新商品图片
     public String updateGoodsImage(MultipartFile file, String goodsName) {
         goodsName = URLDecoder.decode(goodsName, StandardCharsets.UTF_8);
         // file检验
