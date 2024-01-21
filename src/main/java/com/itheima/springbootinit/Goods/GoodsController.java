@@ -42,15 +42,11 @@ public class GoodsController {
     public Goods addGoods(@RequestParam("name") String name,
                           @RequestParam("description") String description,
                           @RequestParam("price") int price,
-                          @RequestParam("status") boolean status,
-                          @RequestParam("imagePath") String imagePath,
                           @RequestParam("type") GoodsType type) {
         Goods goods = new Goods();
         goods.setName(name);
         goods.setDescription(description);
         goods.setPrice(price);
-        goods.setStatus(status);
-        goods.setImagePath(imagePath);
         goods.setType(type);
         Goods save = goodsDao.save(goods);
         return save;
@@ -100,8 +96,9 @@ public class GoodsController {
         }
         // 更新数据库
         Goods goods = goodsDao.findByName(goodsName);
-        System.out.println(goods.toString());
-        goods.setImagePath(fileName);
+//        System.out.println(goods.toString());
+        String webPath = "http://localhost:8080/images/" + fileName;
+        goods.setImagePath(webPath);
 
         System.out.println(fileName);
         return "images/" + fileName;
