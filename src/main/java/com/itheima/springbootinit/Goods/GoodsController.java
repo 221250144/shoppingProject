@@ -100,7 +100,7 @@ public class GoodsController {
         String webPath = "http://localhost:8080/images/" + fileName;
         goods.setImagePath(webPath);
 
-        System.out.println(fileName);
+//        System.out.println(fileName);
         return "images/" + fileName;
     }
 }
